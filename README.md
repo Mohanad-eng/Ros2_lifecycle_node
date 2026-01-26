@@ -123,7 +123,6 @@ Finalized
 ## Let's Make an example to understand the lifecycle nodes 
 * First make a Workspace called lifecycle_ex1
 ```
-terminal
 
 mkdir lifecycle_ex1
 ```
@@ -247,3 +246,197 @@ ros2 lifecycle set /simple_lifecycle_node shutdown
 ```
 > the node shutdown
 
+## Making A publisher and subscriber using Lifecycle nodes
+
+
+
+📌 Lifecycle Communication Rules :
+
+1. Publishers and subscribers are created in the **on_configure()** function
+
+2. The node **is not allowed** to communicate before configuration.
+
+3. Publishers must be created using **create_lifecycle_publisher()**
+
+4. Normal publishers (create_publisher()) do not respect lifecycle states.
+
+5. The publisher starts sending data only after **on_activate()** is called
+
+6. Before activation, messages are not published.
+
+## Project 1:
+
+making a publisher that publish a number 
+
+* Step 1: Create a workspace and make a src directory
+```
+mkdir lifecycle_ws
+
+cd lifecycle_ws
+
+mkdir src 
+```
+---
+* Step 2: Create your package
+```
+cd src 
+
+ros2 pkg create  --build-type ament_python lifecycle_pkg
+```
+This will create a folder lifecycle_pkg with Python structure:
+```
+lifecycle_pkg/
+
+├── package.xml
+
+├── setup.py
+
+├── resource/
+
+├── lifecycle_pkg/
+
+│   └── __init__.py
+
+└── test/
+```
+---
+* Step 3: Add your lifecycle node code
+
+Create a file called lifecyclenode.py inside the package:
+```
+cd lifecycle_pkg/lifecycle_pkg
+
+touch lifecyclenode.py
+
+chmod +x lifecyclenode.py
+```
+Go inside lifecyclenode.py by using :
+```
+cd src 
+
+code .
+```
+and this will open the whole src in Vscode and you can paste the code
+
+or you can open the file in the terminal from nano 
+```
+nano lifecyclenode.py
+```
+Then paste the code and make ctrl+s to save and ctrl+x to Exit 
+
+Code :
+```
+import rclpy
+from rclpy.lifecycle import LifecycleNode
+from rclpy.lifecycle import TransitionCallbackReturn
+from std_msgs.msg import Int16
+
+class NumberPublisher(LifecycleNode):
+    def __init__(self):
+        super().__init__('number_publisher_lifecycle')
+        self.get_logger().info('Lifecycle node created')
+        self.publisher = None
+        self.timer = None
+
+    def on_configure(self, state):
+        self.get_logger().info('Configuring...')
+        self.publisher = self.create_publisher(Int16, 'number_topic', 10)
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_activate(self, state):
+        self.get_logger().info('Activating...')
+        self.timer = self.create_timer(1.0, self.publish_number)
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_deactivate(self, state):
+        self.get_logger().info('Deactivating...')
+        if self.timer:
+            self.timer.cancel()
+            self.timer = None
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_cleanup(self, state):
+        self.get_logger().info('Cleaning up...')
+        self.publisher = None
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_shutdown(self, state):
+        self.get_logger().info('Shutting down...')
+        return TransitionCallbackReturn.SUCCESS
+
+    def publish_number(self):
+        msg = Int16()
+        msg.data = 4
+        self.publisher.publish(msg)
+        self.get_logger().info(f'Published: {msg.data}')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = NumberPublisher()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+---
+Step 4: Edit setup.py to make the node executable
+
+Open setup.py and make sure you have this entry point:
+```
+entry_points={
+    'console_scripts': [
+        'lifecyclenode = lifecycle_pkg.lifecyclenode:main',
+    ],
+},
+```
+---
+Step 5: Build the workspace
+```
+cd ~/lifecycle_ws
+
+colcon build
+```
+Then source the workspace:
+```
+source install/setup.bash
+```
+---
+Step 6: Run the lifecycle node
+```
+ros2 run lifecycle_pkg lifecyclenode
+```
+---
+in another terminal source the workspace :
+```
+source ~/lifecycle_ws/install/setup.bash
+```
+Then configure and activate:
+```
+ros2 lifecycle set /number_publisher_lifecycle configure
+```
+Tells you :
+```
+Transitioning successful
+```
+Then 
+```
+ros2 lifecycle set /number_publisher_lifecycle activate
+```
+Tells you :
+```
+Transitioning successful
+```
+Step 7: Cleanup / deactivate:
+```
+ros2 lifecycle set /number_publisher_lifecycle deactivate
+
+ros2 lifecycle set /number_publisher_lifecycle cleanup
+
+ros2 lifecycle set /number_publisher_lifecycle shutdown
+```
