@@ -302,7 +302,7 @@ lifecycle_pkg/
 ---
 * Step 3: Add your lifecycle node code
 
-Create a file called lifecyclenode.py inside the package:
+📁Create a file called lifecyclenode.py inside the package:
 ```
 cd lifecycle_pkg/lifecycle_pkg
 
@@ -324,7 +324,7 @@ nano lifecyclenode.py
 ```
 Then paste the code and make ctrl+s to save and ctrl+x to Exit 
 
-Code :
+Code 📍 :
 ```
 import rclpy
 from rclpy.lifecycle import LifecycleNode
@@ -396,7 +396,7 @@ entry_points={
 },
 ```
 ---
-Step 5: Build the workspace
+Step 5: Build the workspace🧱
 ```
 cd ~/lifecycle_ws
 
