@@ -264,9 +264,9 @@ ros2 lifecycle set /simple_lifecycle_node shutdown
 
 6. Before activation, messages are not published.
 
-## Project 1:
+## 🧮 Project 1:
 
-making a publisher that publish a number 
+**making a publisher that publish a number**✔️
 
 * Step 1: Create a workspace and make a src directory
 ```
@@ -416,7 +416,7 @@ in another terminal source the workspace :
 ```
 source ~/lifecycle_ws/install/setup.bash
 ```
-Then configure and activate:
+Then configure and activate✅️:
 ```
 ros2 lifecycle set /number_publisher_lifecycle configure
 ```
@@ -432,7 +432,7 @@ Tells you :
 ```
 Transitioning successful
 ```
-Step 7: Cleanup / deactivate:
+Step 7: Cleanup / deactivate❌️:
 ```
 ros2 lifecycle set /number_publisher_lifecycle deactivate
 
