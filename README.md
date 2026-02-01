@@ -1,6 +1,7 @@
 # ROS 2 Lifecycle Node – States Overview
 
-This repository explains the **ROS 2 Lifecycle Node** concept, focusing on its **main states**, transitions, and behavior.  
+This repository explains the **ROS 2 Lifecycle Node** concept, focusing on its **main states**, transitions, and behavior, containing Full project links to make on lifecycle nodes.
+  
 Lifecycle nodes are useful when you need **controlled startup, shutdown, and resource management**.
 
 ---
@@ -264,11 +265,11 @@ ros2 lifecycle set /simple_lifecycle_node shutdown
 
 6. Before activation, messages are not published.
 
-## 🧮 Project 1:
+## Project 1:
 
-**making a publisher that publish a number**✔️
+### making a publisher that publish a number 
 
-* Step 1: Create a workspace and make a src directory
+**Step 1**: Create a workspace and make a src directory
 ```
 mkdir lifecycle_ws
 
@@ -277,13 +278,13 @@ cd lifecycle_ws
 mkdir src 
 ```
 ---
-* Step 2: Create your package
+**Step 2**: Create your package
 ```
 cd src 
 
 ros2 pkg create  --build-type ament_python lifecycle_pkg
 ```
-This will create a folder lifecycle_pkg with Python structure:
+>This will create a folder lifecycle_pkg with Python structure:
 ```
 lifecycle_pkg/
 
@@ -300,9 +301,9 @@ lifecycle_pkg/
 └── test/
 ```
 ---
-* Step 3: Add your lifecycle node code
+**Step 3**: Add your lifecycle node code
 
-📁Create a file called lifecyclenode.py inside the package:
+> Create a file called lifecyclenode.py inside the package:
 ```
 cd lifecycle_pkg/lifecycle_pkg
 
@@ -310,21 +311,20 @@ touch lifecyclenode.py
 
 chmod +x lifecyclenode.py
 ```
-Go inside lifecyclenode.py by using :
+**Go** inside lifecyclenode.py by using :
 ```
 cd src 
 
 code .
 ```
-and this will open the whole src in Vscode and you can paste the code
-
-or you can open the file in the terminal from nano 
+>and this will open the whole src in Vscode and you can paste the code
+>or you can open the file in the terminal from nano 
 ```
 nano lifecyclenode.py
 ```
-Then paste the code and make ctrl+s to save and ctrl+x to Exit 
+**Then** paste the code and make **ctrl+s** to save and **ctrl+x** to Exit 
 
-Code 📍 :
+Code :
 ```
 import rclpy
 from rclpy.lifecycle import LifecycleNode
@@ -385,9 +385,9 @@ if __name__ == '__main__':
     main()
 ```
 ---
-Step 4: Edit setup.py to make the node executable
+**Step 4**: Edit setup.py to make the node executable
 
-Open setup.py and make sure you have this entry point:
+>Open setup.py and make sure you have this entry point:
 ```
 entry_points={
     'console_scripts': [
@@ -396,31 +396,31 @@ entry_points={
 },
 ```
 ---
-Step 5: Build the workspace🧱
+**Step 5**: Build the workspace
 ```
 cd ~/lifecycle_ws
 
 colcon build
 ```
-Then source the workspace:
+**Then** source the workspace:
 ```
 source install/setup.bash
 ```
 ---
-Step 6: Run the lifecycle node
+**Step 6**: Run the lifecycle node
 ```
 ros2 run lifecycle_pkg lifecyclenode
 ```
 ---
-in another terminal source the workspace :
+**in another terminal** source the workspace :
 ```
 source ~/lifecycle_ws/install/setup.bash
 ```
-Then configure and activate✅️:
+Then **configure** and **activate**:
 ```
 ros2 lifecycle set /number_publisher_lifecycle configure
 ```
-Tells you :
+you see in the terminal :
 ```
 Transitioning successful
 ```
@@ -428,15 +428,17 @@ Then
 ```
 ros2 lifecycle set /number_publisher_lifecycle activate
 ```
-Tells you :
+you see in the terminal  :
 ```
 Transitioning successful
 ```
-Step 7: Cleanup / deactivate❌️:
+**Step 7**: Cleanup / deactivate:
 ```
 ros2 lifecycle set /number_publisher_lifecycle deactivate
-
+```
+```
 ros2 lifecycle set /number_publisher_lifecycle cleanup
-
+```
+```
 ros2 lifecycle set /number_publisher_lifecycle shutdown
 ```
