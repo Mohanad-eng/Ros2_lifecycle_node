@@ -443,6 +443,7 @@ ros2 lifecycle set /number_publisher_lifecycle cleanup
 ros2 lifecycle set /number_publisher_lifecycle shutdown
 ```
 **Diff** between cleanup and shutdown 
+
 cleanup
 
 > node are not finalized and it go again to unconfigure state
